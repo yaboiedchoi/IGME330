@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Greeter</title>
+    <style>
+      *{font-size:1.5em;}
+    </style>
+    <script>
+    
+    function init(){
+        // 1 - get a reference to the button
+        const button = document.querySelector('#btn-greet');
+        button.addEventListener('click', sayHello);
+        //button.onclick = sayHello; <- event handler
+        console.log(button);
+    }
+
+    
+    // 3 - create a `sayHello()` function
+    function sayHello() {
+        // 3A - get name of person from the <input>
+        const name = document.querySelector('#input-firstname').value;
+        // 2 - add a click event to button that calls a `sayHello` function
+        console.log('Hello ' + name);
+        document.querySelector('#output').innerHTML = `Hello ${name}`;
+    }
+    window.onload = init;
+    
+    // 3B - get a reference to the #output <p>
+    // 3C - update HTML of #output <p>
+    
+    </script>
+  </head>
+<body>
+  <button id="btn-greet">Click Me!</button>
+  <input id="input-firstname" placeholder="Type in your name">
+  <p id="output">???</p>
+</body>
+</html>
