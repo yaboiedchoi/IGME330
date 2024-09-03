@@ -31,6 +31,11 @@
         document.querySelector("#output").style.backgroundColor = "yellow";
     }
 
+    function greet(greeting) {
+      let firstName = document.querySelector('#input-firstname').value.trim();
+      let lastName = document.querySelector('#input-lastname').value.trim();
+      document.querySelector('#output').innerText = `${greeting}, ${firstName} ${lastName}`;
+    }
     
     // 3 - create a `sayHello()` function
     function sayHello() {
@@ -45,6 +50,8 @@
         console.log('Hello ' + name);
         document.querySelector('#output').innerText = `Hello ${name}`;
     }
+
+    
     window.onload = init;
     
     // 3B - get a reference to the #output <p>
