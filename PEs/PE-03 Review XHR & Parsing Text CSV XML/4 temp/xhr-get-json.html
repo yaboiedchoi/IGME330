@@ -16,7 +16,7 @@
 	
 	<hr>
 	<button id="my-button">Load Data</button>
-	<p id="output">Click button to load</p>
+	<div id="output">Click button to load</div>
 	
 
 <script>
@@ -28,9 +28,19 @@
         xhr.onload = (e) => {
             console.log(`In onload - HTTP Status Code = ${e.target.status}`);
             const string = e.target.responseText;
-            let json = JSON.parse(string);
+            let json;
+            try {
+                json = JSON.parse(string);
+            }
+            catch {
+                document.querySelector("#output").innerHTML = "json not valid";
+            }
 
+            //console.log(Object.keys(json));
             
+            const dogNames = json.dognames;
+            //console.log(dogNames);
+            const catNames = json.catnames;
             // if(!xml){
             //     document.querySelector("#output").innerHTML = "xml is null";
             //     return;
@@ -41,15 +51,13 @@
 
             const dogHtml = `<ol>${dogNames.map(w => `<li>${w}</li>`).join("")}</ol>`;
             const catHtml = `<ol>${catNames.map(w => `<li>${w}</li>`).join("")}</ol>`;
-            const birdHtml = `<ol>${birdNames.map(w => `<li>${w}</li>`).join("")}</ol>`;
+            //const birdHtml = `<ol>${birdNames.map(w => `<li>${w}</li>`).join("")}</ol>`;
        
             const html = `
                 <h3>Dog Names</h3>
                 ${dogHtml}
                 <h3>Cat Names</h3>
                 ${catHtml}
-                 <h3>Bird Names</h3>
-                ${birdHtml}
             `;
        
             document.querySelector("#output").innerHTML = html;
