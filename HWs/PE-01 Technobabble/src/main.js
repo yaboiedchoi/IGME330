@@ -10,13 +10,17 @@ console.log(words1[0]);
 
 function init() {
     // attach function to button
-    document.querySelector('#myButton').addEventListener('click', randomBabble);
+    document.querySelector('#myButton').addEventListener('click', function() {
+        randomBabble(1);
+    });
 
-    // second (5) button
-
+    // attach function to second button
+    document.querySelector('.fullhd').addEventListener('click', function () {
+        randomBabble(5);
+    })
 
     // run once on start
-    randomBabble();
+    randomBabble(1);
 }
 
 // pick random word from arrays with 1 random operator
@@ -30,13 +34,23 @@ function randomWord(array) {
 }
     
 // create sentance then attach sentance
+// multiplier is how many technobabbles are being generated
 function randomBabble(multiplier) {
     // create the sentance
-    
+    let babble = "";
+    for (let i = 0; i < multiplier; i++) {
+        // add the technobabble
+        babble += `${randomWord(words1)} ${randomWord(words2)} ${randomWord(words3)}`;
+        // new line if not the last one
+        if (multiplier - i > 1) {
+            babble += '\n';
+        }
+    }
 
-    const babble = randomWord(words1) + ' ' + 
-                   randomWord(words2) + ' ' + 
-                   randomWord(words3);
+    // old code
+    // const babble = randomWord(words1) + ' ' + 
+    //                randomWord(words2) + ' ' + 
+    //                randomWord(words3);
         
     // attach new sentance to output
     document.querySelector('#output').innerText = babble;
