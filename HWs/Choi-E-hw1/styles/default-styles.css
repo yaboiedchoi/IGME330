@@ -6,7 +6,7 @@
     font-size: 200%;
 }
 
-#myButton {
+#btn-1 {
     width: 200px;
     height: 50pt;
     font-size: 15pt;
@@ -46,7 +46,7 @@
         height:4rem;
     }
 
-    #myButton {
+    #btn-1 {
         border: solid 2px yellow;
         background-color: black;
         color: yellow;
@@ -90,7 +90,7 @@
         background-color: #23D160;
     }
 
-    #myButton {
+    #btn-1 {
         width: 300px;
         height: 75pt;
         font-size: 1.5rem;
