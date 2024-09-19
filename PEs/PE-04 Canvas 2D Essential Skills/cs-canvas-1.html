@@ -7,6 +7,17 @@
 	canvas{
 		border:1px solid gray;
 	}
+	body{
+	  font-family: sans-serif;
+	}
+	
+button{
+  font-size:1.2em;
+}
+	
+section{
+  margin:.5em 0 .5em 0;
+}
 	</style>
 	<script>
 		// #0 - in this class we will always use ECMAScript 5's "strict" mode
@@ -15,8 +26,35 @@
 		"use strict";
 		
 		// #1 call the `init` function after the pages loads
-		window.onload = init;
+
+		let ctx;
+		let paused = false;
 	
+		const drawRandomRect = () => {
+			ctx.save();
+			ctx.beginPath();
+			ctx.rect(getRandomInt(0, 600), getRandomInt(0, 440), getRandomInt(10, 30), getRandomInt(10, 30));
+			ctx.closePath();
+			ctx.fillStyle = getRandomColor();
+			ctx.fill();
+
+			ctx.restore();
+		}
+
+		const update = () => {
+			if(!paused)
+				requestAnimationFrame(update);
+
+			drawRandomRect();
+		}
+		
+		function canvasClicked(e){
+		  let rect = e.target.getBoundingClientRect();
+		  let mouseX = e.clientX - rect.x;
+ 		  let mouseY = e.clientY - rect.y;
+		  console.log(mouseX,mouseY);
+		}
+
 		function init(){
 			console.log("page loaded!");
 			// #2 Now that the page has loaded, start drawing!
@@ -25,7 +63,7 @@
 			let canvas = document.querySelector("canvas");
 			
 			// B - the `ctx` variable points at a "2D drawing context"
-			let ctx = canvas.getContext("2d");
+			ctx = canvas.getContext("2d");
 			
 			// C - all fill operations are now in red
 			ctx.fillStyle = "red"; 
@@ -50,13 +88,48 @@
 
             ctx.strokeStyle = 'rgba(255,100,255,0.25)'; // pink
             ctx.lineWidth = 20; 
-            ctx.strokeRect(250, 250, 400, 50)
+            ctx.strokeRect(250, 250, 400, 50);
+
+			document.querySelector("canvas").onclick = canvasClicked;
+			document.querySelector("#btnPlay").onclick = () => {
+				paused = false;
+				update();
+			}
+			document.querySelector("#btnPause").onclick = () => paused = true;
+
+			update();
 		}
+		// handy helper functions!
+		function getRandomColor(){
+  			function getByte(){
+    			return 55 + Math.round(Math.random() * 200);
+  			}
+  			return "rgba(" + getByte() + "," + getByte() + "," + getByte() + ",.8)";
+		}
+
+		function getRandomInt(min, max) {
+			return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+		window.onload = init;
 	</script>
 </head>
 <body>
 	<canvas width="640" height="480">
 		Get a real browser!
 	</canvas>
+	<section>
+		<button id="btnPlay">Play</button>
+		<button id="btnPause">Pause</button>
+	  </section>
+	  <section>
+		<span>
+		  <input type="checkbox" id="cbRectangles" checked>
+		  <label for="cbRectangles">Rectangles</label>
+		</span>
+	  </section>
+	  <section>
+		<p>Click on the screen to "spraypaint" rectangles (you probably want the screensaver to be paused)</p>
+	  </section>
 </body>
 </html>
