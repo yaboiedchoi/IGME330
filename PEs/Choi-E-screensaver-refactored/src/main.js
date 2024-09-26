@@ -1,44 +1,11 @@
 import { getRandomColor, getRandomInt } from "./utils.js";
-import { drawRectangle, drawArc, drawLine } from "./canvas-utils.js";
+import { drawRectangle, drawArc, drawLine, drawRandomArc, drawRandomLine, drawRandomRect } from "./canvas-utils.js";
 
 let ctx;
 let paused = false;
 let createRectangles = true;
 let drawArcs = false;
 let drawLines = false;
-	
-const drawRandomRect = () => {
-	drawRectangle(ctx,
-                  getRandomInt(-10, 650), 
-				  getRandomInt(-10, 490), 
-	     		  getRandomInt(10, 30), 
-				  getRandomInt(10, 30), 
-				  getRandomColor(), 
-				  1, 
-				  "white");
-}
-
-const drawRandomArc = () => {
-	drawArc(ctx,
-            getRandomInt(0, 640), // random x
-			getRandomInt(0, 480), // random y
-			getRandomInt(10, 100), //random radius
-			getRandomColor(), //random color
-			getRandomInt(0, 20), // random line width
-			getRandomColor(), // random border color
-			getRandomInt(0, Math.PI * 2), 
-			getRandomInt(0, Math.PI * 2));
-}
-
-const drawRandomLine = () => {
-	drawLine(ctx,
-             getRandomInt(0, 640), // random x1
-			 getRandomInt(0, 480), // random y1
-			 getRandomInt(0, 640), // random x2
-			 getRandomInt(0, 480), // random y2
-			 getRandomInt(1, 20), // random line width
-			 getRandomColor()); // random color
-}
 
 const update = () => {
 	if(!paused)
@@ -46,13 +13,13 @@ const update = () => {
 
 	// tested - all work
 	if (createRectangles)
-		drawRandomRect();
+		drawRandomRect(ctx);
 
 	if (drawArcs)
-		drawRandomArc();
+		drawRandomArc(ctx);
 
 	if (drawLines)
-		drawRandomLine();
+		drawRandomLine(ctx);
 }
 		
 const canvasClicked = (e) => {

@@ -1,3 +1,5 @@
+import { getRandomInt, getRandomColor } from "./utils.js";
+
 export const drawRectangle = (ctx,
                               x, 
                               y, 
@@ -60,4 +62,37 @@ export const drawLine = (ctx,
     ctx.strokeStyle = pStrokeStyle;
     ctx.stroke();
     ctx.restore();
+}
+
+export const drawRandomRect = (ctx) => {
+	drawRectangle(ctx,
+                  getRandomInt(-10, 650), 
+				  getRandomInt(-10, 490), 
+	     		  getRandomInt(10, 30), 
+				  getRandomInt(10, 30), 
+				  getRandomColor(), 
+				  1, 
+				  "white");
+}
+
+export const drawRandomArc = (ctx) => {
+	drawArc(ctx,
+            getRandomInt(0, 640), // random x
+			getRandomInt(0, 480), // random y
+			getRandomInt(10, 100), //random radius
+			getRandomColor(), //random color
+			getRandomInt(0, 20), // random line width
+			getRandomColor(), // random border color
+			getRandomInt(0, Math.PI * 2), 
+			getRandomInt(0, Math.PI * 2));
+}
+
+export const drawRandomLine = (ctx) => {
+	drawLine(ctx,
+             getRandomInt(0, 640), // random x1
+			 getRandomInt(0, 480), // random y1
+			 getRandomInt(0, 640), // random x2
+			 getRandomInt(0, 480), // random y2
+			 getRandomInt(1, 20), // random line width
+			 getRandomColor()); // random color
 }
