@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Sine Start</title>
+	<style>
+		canvas{ border: 1px solid black; }
+		button { font-size:1.2em; }
+	</style>
+	<script>
+	"use strict";
+	const canvasWidth = 854, canvasHeight = 480;
+	let ctx;
+	let n = 0;
+	// const divergence = 137.5;
+	// const c = 4;
+	let radius = 1;
+	let fps = 1000;
+	let multiplierConst = 0.1;
+	let autoReset = true;
+	let addColor = false;
+	let uncapFPS = true;
+
+	window.onload = init;
+
+	function init(){
+		ctx = canvas.getContext("2d");
+		canvas.width = canvasWidth;
+		canvas.height = canvasHeight;
+		ctx.fillRect(0,0,canvasWidth,canvasHeight);
+
+		document.querySelector("#restart").onclick = () => {
+			clearCanvas(ctx);
+		}
+
+		document.querySelector("#ctrl-const").onchange = (e) => {
+			clearCanvas(ctx);
+			
+			// mathmatically derive radius from multiplier
+			//radius = 1.2 * Math.log10(e.target.value) + 4;
+			radius = 4 * e.target.value + 0.6;
+			//console.log(e.target.value);
+			//console.log(radius);
+
+			// update multiplier
+			multiplierConst = e.target.value;
+		}
+
+		document.querySelector("#auto-reset").onchange = (e) => {
+			autoReset = e.target.checked;
+			console.log(autoReset);
+		}
+
+		document.querySelector("#color").onchange = (e) => {
+			addColor = e.target.checked;
+			console.log(addColor);
+			clearCanvas(ctx);
+		}
+
+		document.querySelector("#uncap-fps").onchange = (e) => {
+			uncapFPS = e.target.checked;
+			if (uncapFPS)
+				fps = 1000;
+			else
+				fps = 60;
+			console.log(fps);
+		}
+
+		loop();
+	}
+	
+	function loop(){
+    	setTimeout(loop,1000/fps);
+
+		// each frame draw a new dot
+		// `a` is the angle
+		// `r` is the radius from the center (e.g. "Pole") of the flower
+		// `c` is the "padding/spacing" between the dots
+		// let a = n * dtr(divergence);
+		// let r = c * Math.sqrt(n);
+		// console.log(a,r);
+
+		if (isPrime(n)){
+			let a = n;
+			let r = n;
+
+			let x = (r * Math.cos(r) * multiplierConst) + canvasWidth/2;
+			let y = (r * Math.sin(r) * multiplierConst) + canvasHeight/2;
+			
+			// if y coordinate is out of bounds
+			if (y <= 0 || y >= canvasHeight){
+				//console.log("Y is out of bounds, drawing nothing");
+			}
+			// if x coordinate is out of bounds, clear the canvas if autoreset is on
+			else if (x <= 0 || x >= canvasWidth){
+				if (autoReset)
+					clearCanvas(ctx);
+				else {}
+					//console.log("X is out of bounds, drawing nothing");
+			}
+			// if both x and y are within bounds, draw the circle
+			else {
+				let color;
+				if (addColor) {
+					let aDeg = n % 256;
+					color = `rgb(${aDeg},220,${255 - aDeg})`;
+				}
+				else {
+					color = "white";
+				}
+				drawCircle(ctx,x,y,radius,color);
+			}
+		}
+
+		// now calculate the `x` and `y`
+		// let x = r * Math.cos(a) + canvasWidth/2;
+		// let y = r * Math.sin(a) + canvasHeight/2;
+		// console.log(x,y);
+
+		// RGB based on N
+		// let color = `rgb(${n % 256},0,255)`;
+
+		// RGB based on angle
+		// let aDegrees = (n * divergence) % 256;
+		// let color = `rgb(${aDegrees},0,255)`;
+
+		// HSL based on quadrant
+		// let aDegrees = (n * divergence) % 361;
+		// let color = `hsl(${aDegrees},100%,50%)`;
+
+		// hue based on n
+		// let color = `hsl(${n/5 % 361},100%,50%)`;
+
+		n++;
+	}
+
+
+	// helpers
+	function dtr(degrees){
+		return degrees * (Math.PI/180);
+	}
+
+	function drawCircle(ctx,x,y,radius,color){
+		ctx.save();
+
+		ctx.fillStyle = color;
+		ctx.beginPath();
+		ctx.arc(x,y,radius,0,Math.PI * 2);
+		ctx.closePath();
+		ctx.fill();
+		
+		ctx.restore();
+	}
+
+	const drawRectangle = (ctx,
+                           x, 
+                           y, 
+                           width, 
+                           height, 
+                           pFillStyle="black") => {
+    ctx.save();
+
+    ctx.beginPath();
+    ctx.rect(x - (0.5 * width), y - (0.5 * height), width, height);
+    ctx.closePath();
+    ctx.fillStyle = pFillStyle;
+    ctx.fill();
+
+    ctx.restore();
+	}
+
+	const clearCanvas = (ctx) => {
+		drawRectangle(ctx,canvasWidth/2,canvasHeight/2,canvasWidth,canvasHeight,"black");
+		n = 0;
+	}
+
+	// check if number is prime
+	const isPrime = (num) => {
+    	for(let i = 2, s = Math.sqrt(num); i <= s; i++) {
+        	if(num % i === 0) return false;
+    	}
+    	return num > 1;
+	}
+
+	</script>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<button id="restart">Restart</button>
+<input type="checkbox" id="auto-reset" checked>
+<label for="auto-reset">Auto Reset</label>
+<input type="checkbox" id="color">
+<label for="color">Colored Points</label>
+<input type="checkbox" id="uncap-fps" checked>
+<label for="uncap-fps">Uncapped FPS</label>
+<div id="zoom-control">
+	<label>Coordinate Const Multiplier (lower number, more points)</label>
+	<select id="ctrl-const">
+		<option value="1">1</option>
+		<option value="0.1" selected>0.1</option>
+		<option value="0.01">0.01</option>
+		<option value="0.001">0.001</option>
+	</select>
+</div>
+<h1>About this app</h1>
+<ul>
+	<li>
+		Although this isn't a true phyllotaxis, it is a similar spiral
+		pattern that is a visualization of Dirichlet’s theorem! I hope I
+		don't get my grade deducted for this.
+	</li>
+	<li>The pulldown menu allows the graph to show more points.
+		The lower the number, the more points are shown, but the 
+		longer it will take to draw! Using the value chosen, the
+		dot radius will be calculated mathmatically. The additional
+		screenshot in the file shows me using desmos to derive the
+		formula, where it started with a complicated logarithmic 
+		function that was later simplified to a linear function.
+	</li>
+	<li>
+		The Restart button will clear the canvas and start over.
+	</li>
+	<li>
+		The Auto Reset checkbox will clear the canvas when there
+		are no more points that will be visible on the canvas.
+	</li>
+	<li>
+		The Colored Points checkbox will color the points based on
+		their angle from the origin. The color pallete is very floral!
+	</li>
+	<li>
+		The Uncapped FPS checkbox will allow the points to be drawn
+		as fast as the browser can handle. If unchecked, the points
+		will be drawn at 60fps.
+	</li>
+	<li>
+		Changes made from starter code
+		<ul>
+			<li>
+				increased framerate to as fast as the browser can handle.
+				If set to 60, the points will be too slowly drawn.
+			</li>
+			<li>
+				Increased screen size to 854 x 480
+			</li>
+			<li>
+				c and divergence angle are not used at all. Instead, 
+				the points are calculated on the polar coordinate
+				(n, n), where n is incrimented every point, however
+				it skips every non-prime number. This creates an
+				interesting pattern, but if you choose a lower const
+				multiplier, a beautiful sight will appear for those who
+				have the patience to wait!
+			</li>
+		</ul>
+	</li>
+</ul>
+</body>
+</html>
