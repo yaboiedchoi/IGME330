@@ -5,6 +5,9 @@ let audioCtx;
 // 2 - WebAudio nodes that are part of our WebAudio audio routing graph
 let element, sourceNode, analyserNode, gainNode;
 
+// create biquadfilter node
+let biquadFilter,lowShelfBiquadFilter;
+
 // 3 - here we are faking an enumeration
 const DEFAULTS = Object.freeze({
     gain : 0.5,
@@ -30,6 +33,16 @@ const setupWebAudio = (filePath) => {
 // 4 - create an a source node that points at the <audio> element
     sourceNode = audioCtx.createMediaElementSource(element);
 
+// create biquadfilter note
+    biquadFilter = audioCtx.createBiquadFilter();
+    biquadFilter.type = "highshelf";
+    // biquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+    // biquadFilter.gain.setValueAtTime(25, audioCtx.currentTime);
+
+// biquadfilter for lowshelf
+    lowShelfBiquadFilter = audioCtx.createBiquadFilter();
+    lowShelfBiquadFilter.type = "lowshelf";
+
 // 5 - create an analyser node
 // note the UK spelling of "Analyser"
     analyserNode = audioCtx.createAnalyser();
@@ -51,7 +64,10 @@ the amplitude of that frequency.
     gainNode.gain.value = DEFAULTS.gain;
 
 // 8 - connect the nodes - we now have an audio graph
-    sourceNode.connect(analyserNode);
+    sourceNode.connect(biquadFilter);
+    biquadFilter.connect(lowShelfBiquadFilter);
+    lowShelfBiquadFilter.connect(analyserNode);
+
     analyserNode.connect(gainNode);
     gainNode.connect(audioCtx.destination);
 }
@@ -74,4 +90,4 @@ const setVolume = (value) => {
     gainNode.gain.value = value;
 }
 
-export {audioCtx, setupWebAudio, playCurrentSound, pauseCurrentSound, loadSoundFile, setVolume, analyserNode };
+export {audioCtx, setupWebAudio, playCurrentSound, pauseCurrentSound, loadSoundFile, setVolume, analyserNode, biquadFilter, lowShelfBiquadFilter };

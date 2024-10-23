@@ -29,12 +29,22 @@
     </section>
     <section>
       <span><input type="checkbox" id="gradient-cb"><label for="gradient-cb">Show Gradient</label></span>
-      <span><input type="checkbox" id="bars-cb"><label for="bars-cb">Show Bars</label></span>
+      <span><input type="checkbox" id="bars-cb" checked><label for="bars-cb">Show Bars</label></span>
       <span><input type="checkbox" id="circles-cb"><label for="circles-cb">Show Circles</label></span>
       <!-- we'll use this 4th checkbox soon! -->
       <span><input type="checkbox" id="noise-cb"><label for="noise-cb">Show Noise</label></span>
       <span><input type="checkbox" id="invert-cb"><label for="invert-cb">Invert Colors</label></span>
       <span><input type="checkbox" id="emboss-cb"><label for="emboss-cb">Emboss</label></span>
+      <span><input type="checkbox" id="byte-freq" checked><label for="byte-freq">Use Byte Frequency</label></span>
+      <label>Mouth Type: 
+        <select id="mouth-select">
+          <option value="mouth1" selected>Red Bar Mouth</option>
+          <option value="mouth2">Line Mouth</option>
+        </select>
+      </label>
+      <span><input type="checkbox" id="high-shelf"><label for="high-shelf">HighShelf Filter (Treble)</label></span>
+      <span><input type="checkbox" id="low-shelf"><label for="low-shelf">LowShelf Filter (Bass)</label></span>
+      <span><input type="checkbox" id="distortion"><label for="distortion">HighShelf Filter (Treble)</label></span>
     </section>
   </div>
 </main>

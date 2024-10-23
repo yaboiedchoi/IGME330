@@ -43,7 +43,12 @@ const setupCanvas = (canvasElement,analyserNodeRef) => {
 const draw = (params={}) => {
   // 1 - populate the audioData array with the frequency data from the analyserNode
 	// notice these arrays are passed "by reference" 
-	analyserNode.getByteFrequencyData(audioData);
+    if (params.byteFreq) {
+    	analyserNode.getByteFrequencyData(audioData);
+    }
+    else {
+        analyserNode.getByteTimeDomainData(audioData); // waveform data
+    }
 	// OR
 	//analyserNode.getByteTimeDomainData(audioData); // waveform data
 	
@@ -123,11 +128,11 @@ const draw = (params={}) => {
         ctx.restore();
     }
 	// 4 - draw bars
-	if (params.showBars) {
+	if (params.mouthType == "mouth1") {
         let barSpacing = 0;
         // let margin = 5;
         // let screenWidthForBars = canvasWidth - (audioData.length * barSpacing) - margin * 2;
-        let barWidth = 3;
+        let barWidth = 1;
         let barMaxHeight = 70;
         // let topSpacing = 100;
 
@@ -143,19 +148,49 @@ const draw = (params={}) => {
         
         ctx.save();
         ctx.fillStyle = "red";
-        ctx.StrokeStyle = "black";
-        for (let i = 10; i < audioData.length; i+=2) {
-            ctx.fillRect((canvasWidth / 2) - ((i - 10) * (barWidth + barSpacing - 1.25)), 
+        for (let i = 10; i < audioData.length + 10; i++) {
+            ctx.fillRect((canvasWidth / 2) - ((i - 10) * (barWidth + barSpacing)), 
                          300 - ((audioData[i] / 255) * barMaxHeight),
                          barWidth,
                          ((audioData[i] * 2 / 255) * barMaxHeight));
 
-            ctx.fillRect((canvasWidth / 2) + ((i - 10) * (barWidth + barSpacing - 1.25)), 
+            ctx.fillRect((canvasWidth / 2) + ((i - 10) * (barWidth + barSpacing)), 
                          300 - ((audioData[i] / 255) * barMaxHeight),
                          barWidth,
                          ((audioData[i] * 2 / 255) * barMaxHeight));
         }
 
+        ctx.restore();
+    } // other mouth type
+    else if (params.mouthType == "mouth2") {
+        let maxHeight = 30;
+        //console.log("mouth2");
+        ctx.save();
+        ctx.strokeStyle = "purple";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(400 - audioData.length, 300)
+        for (let i = 0; i < audioData.length; i+=3) {
+            console.log(audioData[audioData.length - i]);
+            if(i % 2 == 0) {
+                ctx.lineTo(400 - audioData.length + i, 300 - (audioData[audioData.length - i] * maxHeight / 255));
+            }
+            else {
+                ctx.lineTo(400 - audioData.length + i, 300 + (audioData[audioData.length - i] * maxHeight / 255));
+            }
+        }
+        for (let i = 0; i < audioData.length; i+=3) {
+            if (i % 2 == 0) {
+                ctx.lineTo(400 + i, 300 - (audioData[i] * maxHeight / 255));
+            }
+            else {
+                ctx.lineTo(400 + i, 300 + (audioData[i] * maxHeight / 255));
+            }
+        }
+        ctx.lineTo(400 + audioData.length, 300);
+        ctx.lineTo(400 - audioData.length, 300);
+        ctx.stroke();
+        ctx.closePath();
         ctx.restore();
     }
 	// 5 - draw circles

@@ -13,11 +13,16 @@ import * as canvas from './canvas.js';
 
 const drawParams = {
   showGradient : false,
-  showBars : false,
+  showBars : true,
   showCircles : false, 
   showNoise : false,
   showInvert : false,
-  showEmboss : false
+  showEmboss : false,
+  byteFreq : true,
+  mouthType : "mouth1",
+  highShelf : false,
+  lowShelf : false,
+  distortion : false
 }
 
 // fps
@@ -136,6 +141,43 @@ const setupUI = (canvasElement) => {
   showEmbossCheckbox.onchange = e => {
     drawParams.showEmboss = e.target.checked;
   }
+
+  // K - hookup use byte frequency data checkbox
+  let useByteFrequencyDataCheckbox = document.querySelector("#byte-freq");
+  // add .onchange event to checkbox
+  useByteFrequencyDataCheckbox.onchange = e => {
+    drawParams.byteFreq = e.target.checked;
+  }
+
+  // L - hookup mouth type
+  let mouthTypeSelect = document.querySelector("#mouth-select");
+  // add .onchange event to select
+  mouthTypeSelect.onchange = e => {
+    drawParams.mouthType = e.target.value;
+  }
+
+  // M - hookup high shelf checkbox
+  let highShelfCheckbox = document.querySelector("#high-shelf");
+  // add .onchange event to checkbox
+  highShelfCheckbox.onchange = e => {
+    drawParams.highShelf = e.target.checked;
+    toggleHighshelf();
+  }
+
+  // N - hookup low shelf checkbox
+  let lowShelfCheckbox = document.querySelector("#low-shelf");
+  // add .onchange event to checkbox
+  lowShelfCheckbox.onchange = e => {
+    drawParams.lowShelf = e.target.checked;
+    toggleLowshelf();
+  }
+
+  // O - hookup distortion checkbox
+  let distortionCheckbox = document.querySelector("#distortion");
+  // add .onchange event to checkbox
+  distortionCheckbox.onchange = e => {
+    drawParams.distortion = e.target.checked;
+  }
 } // end setupUI
 
 const loop = () => {
@@ -167,5 +209,25 @@ const loop = () => {
     //  console.log("---------------------");
     canvas.draw(drawParams);
   }
+
+const toggleHighshelf = () => {
+  if (drawParams.highShelf) {
+    audio.biquadFilter.frequency.setValueAtTime(1000, audio.audioCtx.currentTime);
+    audio.biquadFilter.gain.setValueAtTime(25, audio.audioCtx.currentTime);
+  }
+  else {
+    audio.biquadFilter.gain.setValueAtTime(0, audio.audioCtx.currentTime);
+  }
+}
+
+const toggleLowshelf = () => {
+  if (drawParams.lowShelf) {
+    audio.lowShelfBiquadFilter.frequency.setValueAtTime(1000, audio.audioCtx.currentTime);
+    audio.lowShelfBiquadFilter.gain.setValueAtTime(15, audio.audioCtx.currentTime);
+  }
+  else {
+    audio.lowShelfBiquadFilter.gain.setValueAtTime(0, audio.audioCtx.currentTime);
+  }
+}
 
 export {init};
