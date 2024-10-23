@@ -19,6 +19,14 @@ const makeColor = (red, green, blue, alpha = 1) => {
     }
     return lg;
   };
+
+  const getRadialGradient = (ctx,x1,y1,innerRadius,x2,y2,outerRadius,colorStops) => {
+    let rg = ctx.createRadialGradient(x1,y1,innerRadius,x2,y2,outerRadius);
+    for(let stop of colorStops){
+      rg.addColorStop(stop.percent,stop.color);
+    }
+    return rg;
+  };
   
   // https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
   const goFullscreen = (element) => {
@@ -34,4 +42,4 @@ const makeColor = (red, green, blue, alpha = 1) => {
     // .. and do nothing if the method is not supported
   };
   
-  export {makeColor, getRandomColor, getLinearGradient, goFullscreen};
+  export {makeColor, getRandomColor, getLinearGradient, getRadialGradient, goFullscreen};

@@ -12,13 +12,16 @@ import * as utils from './utils.js';
 import * as canvas from './canvas.js';
 
 const drawParams = {
-  showGradient : true,
-  showBars : true,
-  showCircles : true, 
+  showGradient : false,
+  showBars : false,
+  showCircles : false, 
   showNoise : false,
   showInvert : false,
   showEmboss : false
 }
+
+// fps
+const fps = 60;
 
 // 1 - here we are faking an enumeration
 const DEFAULTS = Object.freeze({
@@ -137,7 +140,7 @@ const setupUI = (canvasElement) => {
 
 const loop = () => {
   /* NOTE: This is temporary testing code that we will delete in Part II */
-    requestAnimationFrame(loop);
+    requestAnimationFrame(loop, 1000/fps);
     // 1) create a byte array (values of 0-255) to hold the audio data
     // normally, we do this once when the program starts up, NOT every frame
     // let audioData = new Uint8Array(audio.analyserNode.fftSize/2);

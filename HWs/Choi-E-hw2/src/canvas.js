@@ -9,7 +9,16 @@
 
 import * as utils from './utils.js';
 
-let ctx,canvasWidth,canvasHeight,gradient,analyserNode,audioData;
+let ctx,
+    canvasWidth,
+    canvasHeight,
+    gradient,
+    analyserNode,
+    audioData,
+    headGradient,
+    eyeGradientL,
+    eyeGradientR,
+    eyelidOffset;
 
 
 const setupCanvas = (canvasElement,analyserNodeRef) => {
@@ -17,8 +26,14 @@ const setupCanvas = (canvasElement,analyserNodeRef) => {
 	ctx = canvasElement.getContext("2d");
 	canvasWidth = canvasElement.width;
 	canvasHeight = canvasElement.height;
+    console.log(canvasWidth + ", " + canvasHeight);
 	// create a gradient that runs top to bottom
 	gradient = utils.getLinearGradient(ctx,0,0,0,canvasHeight,[{percent:0,color:"blue"},{percent:.25,color:"purple"},{percent:.5,color:"black"},{percent:.75,color:"purple"},{percent:1,color:"blue"}]);
+    headGradient = utils.getLinearGradient(ctx,canvasWidth/2,0,canvasWidth/2,canvasHeight,[{percent:1,color:"gray"},{percent:0,color:"skyblue"}]);
+
+    // gradient for eyes
+    eyeGradientL = utils.getRadialGradient(ctx,canvasWidth/2 - 80,canvasHeight/2 - 60,5,canvasWidth/2 - 80,canvasHeight/2 - 80,40,[{percent:0,color:"red"},{percent:1,color:"black"}]);
+    eyeGradientR = utils.getRadialGradient(ctx,canvasWidth/2 + 80,canvasHeight/2 - 60,5,canvasWidth/2 + 80,canvasHeight/2 - 80,40,[{percent:0,color:"red"},{percent:1,color:"black"}]);
 	// keep a reference to the analyser node
 	analyserNode = analyserNodeRef;
 	// this is the array where the analyser data will be stored
@@ -32,6 +47,12 @@ const draw = (params={}) => {
 	// OR
 	//analyserNode.getByteTimeDomainData(audioData); // waveform data
 	
+    // update eyelid offset
+    for (let i = 0; i < audioData.length; i++) {
+        eyelidOffset += (audioData[i] / 255);
+    }
+    eyelidOffset /= audioData.length;
+
 	// 2 - draw background
 	ctx.save();
     ctx.fillStyle = "black";
@@ -39,6 +60,56 @@ const draw = (params={}) => {
     ctx.fillRect(0,0,canvasWidth,canvasHeight);
     ctx.restore();
 		
+    // draw robot head
+    ctx.save();
+    ctx.fillStyle = headGradient;
+    ctx.beginPath();
+    ctx.roundRect(canvasWidth/4,10,canvasWidth / 2,canvasHeight - 20, 50);
+    ctx.fill();
+    ctx.closePath();
+    ctx.restore();
+
+    // draw robot left eye
+    ctx.save();
+    ctx.fillStyle = eyeGradientL;
+    ctx.beginPath();
+    ctx.arc(canvasWidth/2 - 80,canvasHeight/2 - 80,40,0,2*Math.PI);
+    ctx.fill();
+    ctx.closePath();
+
+    // right eye
+    ctx.fillStyle = eyeGradientR;
+    ctx.beginPath();
+    ctx.arc(canvasWidth/2 + 80,canvasHeight/2 - 80,40,0,2*Math.PI);
+    ctx.fill();
+    ctx.closePath();
+    ctx.restore();
+
+    // eyelids left
+    ctx.save();
+    ctx.fillStyle = "gray";
+    ctx.translate(0, -eyelidOffset);
+    ctx.beginPath();
+    ctx.moveTo(280,80);
+    ctx.lineTo(360,80);
+    ctx.lineTo(380,120);
+    ctx.lineTo(260,120);
+    ctx.fill();
+    ctx.closePath();
+    ctx.restore();
+
+    // eyelids right
+    ctx.save();
+    ctx.fillStyle = "gray";
+    ctx.beginPath();
+    ctx.moveTo(520,80);
+    ctx.lineTo(440,80);
+    ctx.lineTo(420,120);
+    ctx.lineTo(540,120);
+    ctx.fill();
+    ctx.closePath();
+    ctx.restore();
+
 	// 3 - draw gradient
 	if (params.showGradient) {
         ctx.save();
