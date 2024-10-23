@@ -20,8 +20,7 @@ const drawParams = {
   showEmboss : false,
   byteFreq : true,
   mouthType : "mouth1",
-  highShelf : false,
-  lowShelf : false,
+  voiceType : "voice2",
   distortion : false
 }
 
@@ -156,27 +155,49 @@ const setupUI = (canvasElement) => {
     drawParams.mouthType = e.target.value;
   }
 
-  // M - hookup high shelf checkbox
-  let highShelfCheckbox = document.querySelector("#high-shelf");
-  // add .onchange event to checkbox
-  highShelfCheckbox.onchange = e => {
-    drawParams.highShelf = e.target.checked;
-    toggleHighshelf();
-  }
+  // // M - hookup high shelf checkbox
+  // let highShelfCheckbox = document.querySelector("#high-shelf");
+  // // add .onchange event to checkbox
+  // highShelfCheckbox.onchange = e => {
+  //   drawParams.highShelf = e.target.checked;
+  //   toggleHighshelf();
+  // }
 
-  // N - hookup low shelf checkbox
-  let lowShelfCheckbox = document.querySelector("#low-shelf");
-  // add .onchange event to checkbox
-  lowShelfCheckbox.onchange = e => {
-    drawParams.lowShelf = e.target.checked;
-    toggleLowshelf();
-  }
+  // // N - hookup low shelf checkbox
+  // let lowShelfCheckbox = document.querySelector("#low-shelf");
+  // // add .onchange event to checkbox
+  // lowShelfCheckbox.onchange = e => {
+  //   drawParams.lowShelf = e.target.checked;
+  //   toggleLowshelf();
+  // }
 
-  // O - hookup distortion checkbox
-  let distortionCheckbox = document.querySelector("#distortion");
-  // add .onchange event to checkbox
-  distortionCheckbox.onchange = e => {
-    drawParams.distortion = e.target.checked;
+  // // O - hookup distortion checkbox
+  // let distortionCheckbox = document.querySelector("#distortion");
+  // // add .onchange event to checkbox
+  // distortionCheckbox.onchange = e => {
+  //   drawParams.distortion = e.target.checked;
+  // }
+
+  // P - hookup voice type
+  let voiceTypeSelect = document.querySelector("#voice-select");
+  // add .onchange event to select
+  voiceTypeSelect.onchange = e => {
+    drawParams.voiceType = e.target.value;
+    console.log(drawParams.voiceType);
+    switch (drawParams.voiceType) {
+      case "voice1":
+        toggleHighshelf(false);
+        toggleLowshelf(true);
+        break;
+      case "voice2":
+        toggleLowshelf(false);
+        toggleHighshelf(false);
+        break;
+      case "voice3":
+        toggleLowshelf(false);
+        toggleHighshelf(true);
+        break;
+    }
   }
 } // end setupUI
 
@@ -210,22 +231,32 @@ const loop = () => {
     canvas.draw(drawParams);
   }
 
-const toggleHighshelf = () => {
-  if (drawParams.highShelf) {
+const toggleHighshelf = (status) => {
+  if (status) {
+    console.log("highshelf on");
     audio.biquadFilter.frequency.setValueAtTime(1000, audio.audioCtx.currentTime);
-    audio.biquadFilter.gain.setValueAtTime(25, audio.audioCtx.currentTime);
+    audio.biquadFilter.gain.setValueAtTime(10, audio.audioCtx.currentTime);
+    audio.lowShelfBiquadFilter.frequency.setValueAtTime(1000, audio.audioCtx.currentTime);
+    audio.lowShelfBiquadFilter.gain.setValueAtTime(-20, audio.audioCtx.currentTime);
   }
   else {
+    console.log("highshelf off");
     audio.biquadFilter.gain.setValueAtTime(0, audio.audioCtx.currentTime);
+    audio.lowShelfBiquadFilter.gain.setValueAtTime(0, audio.audioCtx.currentTime);
   }
 }
 
-const toggleLowshelf = () => {
-  if (drawParams.lowShelf) {
+const toggleLowshelf = (status) => {
+  if (status) {
+    console.log("lowshelf on");
+    audio.biquadFilter.frequency.setValueAtTime(1000, audio.audioCtx.currentTime);
+    audio.biquadFilter.gain.setValueAtTime(-20, audio.audioCtx.currentTime);
     audio.lowShelfBiquadFilter.frequency.setValueAtTime(1000, audio.audioCtx.currentTime);
-    audio.lowShelfBiquadFilter.gain.setValueAtTime(15, audio.audioCtx.currentTime);
+    audio.lowShelfBiquadFilter.gain.setValueAtTime(10, audio.audioCtx.currentTime);
   }
   else {
+    console.log("lowshelf off");
+    audio.biquadFilter.gain.setValueAtTime(0, audio.audioCtx.currentTime);
     audio.lowShelfBiquadFilter.gain.setValueAtTime(0, audio.audioCtx.currentTime);
   }
 }
