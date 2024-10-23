@@ -48,10 +48,13 @@ const draw = (params={}) => {
 	//analyserNode.getByteTimeDomainData(audioData); // waveform data
 	
     // update eyelid offset
+    // eyelids will move depending on the average of all audio data
+    eyelidOffset = 0;
     for (let i = 0; i < audioData.length; i++) {
         eyelidOffset += (audioData[i] / 255);
     }
     eyelidOffset /= audioData.length;
+    //console.log(eyelidOffset);  
 
 	// 2 - draw background
 	ctx.save();
@@ -88,7 +91,7 @@ const draw = (params={}) => {
     // eyelids left
     ctx.save();
     ctx.fillStyle = "gray";
-    ctx.translate(0, -eyelidOffset);
+    ctx.translate(0, -eyelidOffset * 40);
     ctx.beginPath();
     ctx.moveTo(280,80);
     ctx.lineTo(360,80);
@@ -101,6 +104,7 @@ const draw = (params={}) => {
     // eyelids right
     ctx.save();
     ctx.fillStyle = "gray";
+    ctx.translate(0, -eyelidOffset * 40);
     ctx.beginPath();
     ctx.moveTo(520,80);
     ctx.lineTo(440,80);
@@ -120,21 +124,38 @@ const draw = (params={}) => {
     }
 	// 4 - draw bars
 	if (params.showBars) {
-        let barSpacing = 4;
-        let margin = 5;
-        let screenWidthForBars = canvasWidth - (audioData.length * barSpacing) - margin * 2;
-        let barWidth = screenWidthForBars / audioData.length;
-        let barHeight = 200;
-        let topSpacing = 100;
+        let barSpacing = 0;
+        // let margin = 5;
+        // let screenWidthForBars = canvasWidth - (audioData.length * barSpacing) - margin * 2;
+        let barWidth = 3;
+        let barMaxHeight = 70;
+        // let topSpacing = 100;
 
+        // ctx.save();
+        // ctx.fillStyle = "rgba(255,255,255,0.50)";
+        // ctx.strokeStyle = "rgba(0,0,0,0.50)";
+        // // loop through the data and draw!
+        // for (let i = 0; i < audioData.length; i++) {
+        //     ctx.fillRect(margin + i * (barWidth + barSpacing), topSpacing + 256 - audioData[i], barWidth, barHeight);
+        //     ctx.strokeRect(margin + i * (barWidth + barSpacing), topSpacing + 256 - audioData[i], barWidth, barHeight);
+        // }
+        // ctx.restore();
+        
         ctx.save();
-        ctx.fillStyle = "rgba(255,255,255,0.50)";
-        ctx.strokeStyle = "rgba(0,0,0,0.50)";
-        // loop through the data and draw!
-        for (let i = 0; i < audioData.length; i++) {
-            ctx.fillRect(margin + i * (barWidth + barSpacing), topSpacing + 256 - audioData[i], barWidth, barHeight);
-            ctx.strokeRect(margin + i * (barWidth + barSpacing), topSpacing + 256 - audioData[i], barWidth, barHeight);
+        ctx.fillStyle = "red";
+        ctx.StrokeStyle = "black";
+        for (let i = 10; i < audioData.length; i+=2) {
+            ctx.fillRect((canvasWidth / 2) - ((i - 10) * (barWidth + barSpacing - 1.25)), 
+                         300 - ((audioData[i] / 255) * barMaxHeight),
+                         barWidth,
+                         ((audioData[i] * 2 / 255) * barMaxHeight));
+
+            ctx.fillRect((canvasWidth / 2) + ((i - 10) * (barWidth + barSpacing - 1.25)), 
+                         300 - ((audioData[i] / 255) * barMaxHeight),
+                         barWidth,
+                         ((audioData[i] * 2 / 255) * barMaxHeight));
         }
+
         ctx.restore();
     }
 	// 5 - draw circles
