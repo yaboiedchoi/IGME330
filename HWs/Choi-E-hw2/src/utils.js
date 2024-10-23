@@ -42,4 +42,47 @@ const makeColor = (red, green, blue, alpha = 1) => {
     // .. and do nothing if the method is not supported
   };
   
-  export {makeColor, getRandomColor, getLinearGradient, getRadialGradient, goFullscreen};
+  class Eyelid {
+    constructor(ctx, topLeftX, topLeftY, bottomLeftX, bottomLeftY, width, audioData) {
+      this.ctx = ctx;
+      this.topLeftX = topLeftX;
+      this.topLeftY = topLeftY;
+      this.bottomLeftX = bottomLeftX;
+      this.bottomLeftY = bottomLeftY;
+      this.width = width;
+      this.audioData = audioData;
+    }
+    update(){
+
+    }
+    draw(){
+
+    }
+  }
+  // // eyelids left
+  // ctx.save();
+  // ctx.fillStyle = "gray";
+  // ctx.translate(0, -eyelidOffset * 40);
+  // ctx.beginPath();
+  // ctx.moveTo(280,80);
+  // ctx.lineTo(360,80);
+  // ctx.lineTo(380,120);
+  // ctx.lineTo(260,120);
+  // ctx.fill();
+  // ctx.closePath();
+  // ctx.restore();
+
+  // // eyelids right
+  // ctx.save();
+  // ctx.fillStyle = "gray";
+  // ctx.translate(0, -eyelidOffset * 40);
+  // ctx.beginPath();
+  // ctx.moveTo(520,80);
+  // ctx.lineTo(440,80);
+  // ctx.lineTo(420,120);
+  // ctx.lineTo(540,120);
+  // ctx.fill();
+  // ctx.closePath();
+  // ctx.restore();
+
+  export {makeColor, getRandomColor, getLinearGradient, getRadialGradient, goFullscreen, Eyelid};

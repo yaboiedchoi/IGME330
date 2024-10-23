@@ -93,6 +93,8 @@ const draw = (params={}) => {
     ctx.closePath();
     ctx.restore();
 
+    let eyelidLeft = new Eyelid();
+    
     // eyelids left
     ctx.save();
     ctx.fillStyle = "gray";
