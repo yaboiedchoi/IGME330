@@ -10,6 +10,8 @@
 import * as audio from './audio.js';
 import * as utils from './utils.js';
 import * as canvas from './canvas.js';
+// OLD
+// import * as jsonReader from './json-reader.js';
 
 const drawParams = {
   showGradient : false,
@@ -21,18 +23,57 @@ const drawParams = {
   byteFreq : true,
   mouthType : "mouth1",
   voiceType : "voice2",
-  distortion : false
 }
 
 // fps
 const fps = 60;
 
+// json
+let json;
+
+// audio object
+let audioPathList = [];
+
 // 1 - here we are faking an enumeration
-const DEFAULTS = Object.freeze({
-	sound1  :  "media/New Adventure Theme.mp3"
-});
+const DEFAULTS = {
+};
+
+utils.readAppData(json => {
+  // set default song paths
+  DEFAULTS.sound1 = json["audio"]["1"]["path"];
+  // set default values
+
+  // title
+  document.title = json.title;
+  document.querySelector("#title").innerHTML = json.title;
+
+  // volume
+  // console.log(json["default-slider-values"].volume);
+  document.querySelector("#volume-slider").value = json["default-values"].volume;
+  document.querySelector("#volume-label").innerHTML = Math.round(json["default-values"].volume / 2 * 100);
+  
+  let volumeSlider = document.querySelector("#volume-slider");
+  let volumeLabel = document.querySelector("#volume-label");
+  // add .oninput event to slider
+  volumeSlider.oninput = e => {
+    // set the gain
+    audio.setVolume(e.target.value);
+    // update the label to match the value
+    volumeLabel.innerHTML = Math.round((e.target.value/2 * 100));
+  }
+
+  // path
+  // console.log(json["audio"]["1"]);
+  for (let key in json["audio"]){
+    DEFAULTS["sound" + key] = json["audio"][key]["path"];
+  }
+  console.log(DEFAULTS);
+})
 
 const init = () => {
+//   // load and parse the JSON file
+//   loadJson();
+
 	console.log("init called");
 	console.log(`Testing utils.getRandomColor() import: ${utils.getRandomColor()}`);
 	audio.setupWebAudio(DEFAULTS.sound1);
@@ -76,14 +117,14 @@ const setupUI = (canvasElement) => {
 
     // C - hookup volume slider & label
     let volumeSlider = document.querySelector("#volume-slider");
-    let volumeLabel = document.querySelector("#volume-label");
-    // add .oninput event to slider
-    volumeSlider.oninput = e => {
-      // set the gain
-      audio.setVolume(e.target.value);
-      // update the label to match the value
-      volumeLabel.innerHTML = Math.round((e.target.value/2 * 100));
-    }
+    // let volumeLabel = document.querySelector("#volume-label");
+    // // add .oninput event to slider
+    // volumeSlider.oninput = e => {
+    //   // set the gain
+    //   audio.setVolume(e.target.value);
+    //   // update the label to match the value
+    //   volumeLabel.innerHTML = Math.round((e.target.value/2 * 100));
+    // }
 
     // set the value of label to match initial value of slider
     volumeSlider.dispatchEvent(new Event("input"));
@@ -100,46 +141,46 @@ const setupUI = (canvasElement) => {
     }
   }
 
-  // E - hookup showGradient checkbox
-  let showGradientCheckbox = document.querySelector("#gradient-cb");
-  // add .onchange event to checkbox
-  showGradientCheckbox.onchange = e => {
-    drawParams.showGradient = e.target.checked;
-  }
-  // F - hookup showBars checkbox
-  let showBarsCheckbox = document.querySelector("#bars-cb");
-  // add .onchange event to checkbox
-  showBarsCheckbox.onchange = e => {
-    drawParams.showBars = e.target.checked;
-  }
+  // // E - hookup showGradient checkbox
+  // let showGradientCheckbox = document.querySelector("#gradient-cb");
+  // // add .onchange event to checkbox
+  // showGradientCheckbox.onchange = e => {
+  //   drawParams.showGradient = e.target.checked;
+  // }
+  // // F - hookup showBars checkbox
+  // let showBarsCheckbox = document.querySelector("#bars-cb");
+  // // add .onchange event to checkbox
+  // showBarsCheckbox.onchange = e => {
+  //   drawParams.showBars = e.target.checked;
+  // }
 
-  // G - hookup showCircles checkbox
-  let showCirclesCheckbox = document.querySelector("#circles-cb");
-  // add .onchange event to checkbox
-  showCirclesCheckbox.onchange = e => {
-    drawParams.showCircles = e.target.checked;
-  }
+  // // G - hookup showCircles checkbox
+  // let showCirclesCheckbox = document.querySelector("#circles-cb");
+  // // add .onchange event to checkbox
+  // showCirclesCheckbox.onchange = e => {
+  //   drawParams.showCircles = e.target.checked;
+  // }
 
-  // H - hookup showNoise checkbox
-  let showNoiseCheckbox = document.querySelector("#noise-cb");
-  // add .onchange event to checkbox
-  showNoiseCheckbox.onchange = e => {
-    drawParams.showNoise = e.target.checked;
-  }
+  // // H - hookup showNoise checkbox
+  // let showNoiseCheckbox = document.querySelector("#noise-cb");
+  // // add .onchange event to checkbox
+  // showNoiseCheckbox.onchange = e => {
+  //   drawParams.showNoise = e.target.checked;
+  // }
 
-  // I - hookup showInvert checkbox
-  let showInvertCheckbox = document.querySelector("#invert-cb");
-  // add .onchange event to checkbox
-  showInvertCheckbox.onchange = e => {
-    drawParams.showInvert = e.target.checked;
-  }
+  // // I - hookup showInvert checkbox
+  // let showInvertCheckbox = document.querySelector("#invert-cb");
+  // // add .onchange event to checkbox
+  // showInvertCheckbox.onchange = e => {
+  //   drawParams.showInvert = e.target.checked;
+  // }
 
-  // J - hookup showEmboss checkbox
-  let showEmbossCheckbox = document.querySelector("#emboss-cb");
-  // add .onchange event to checkbox
-  showEmbossCheckbox.onchange = e => {
-    drawParams.showEmboss = e.target.checked;
-  }
+  // // J - hookup showEmboss checkbox
+  // let showEmbossCheckbox = document.querySelector("#emboss-cb");
+  // // add .onchange event to checkbox
+  // showEmbossCheckbox.onchange = e => {
+  //   drawParams.showEmboss = e.target.checked;
+  // }
 
   // K - hookup use byte frequency data checkbox
   let useByteFrequencyDataCheckbox = document.querySelector("#byte-freq");
@@ -203,7 +244,8 @@ const setupUI = (canvasElement) => {
 
 const loop = () => {
   /* NOTE: This is temporary testing code that we will delete in Part II */
-    requestAnimationFrame(loop, 1000/fps);
+    //requestAnimationFrame(loop, 1000/fps);
+    setTimeout(loop, 1000/fps);
     // 1) create a byte array (values of 0-255) to hold the audio data
     // normally, we do this once when the program starts up, NOT every frame
     // let audioData = new Uint8Array(audio.analyserNode.fftSize/2);

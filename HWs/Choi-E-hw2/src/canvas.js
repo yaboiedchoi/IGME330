@@ -16,10 +16,18 @@ let ctx,
     analyserNode,
     audioData,
     headGradient,
-    eyeGradientL,
-    eyeGradientR,
-    eyelidOffset;
+    leftEye,
+    rightEye,
+    eyelidLeft,
+    eyelidRight;
 
+// debug
+let eyeGradientR;
+
+// eye colors
+let eyeColorR = 255;
+let eyeColorG = 255;
+let eyeColorB = 255;
 
 const setupCanvas = (canvasElement,analyserNodeRef) => {
 	// create drawing context
@@ -32,12 +40,44 @@ const setupCanvas = (canvasElement,analyserNodeRef) => {
     headGradient = utils.getLinearGradient(ctx,canvasWidth/2,0,canvasWidth/2,canvasHeight,[{percent:1,color:"gray"},{percent:0,color:"skyblue"}]);
 
     // gradient for eyes
-    eyeGradientL = utils.getRadialGradient(ctx,canvasWidth/2 - 80,canvasHeight/2 - 60,5,canvasWidth/2 - 80,canvasHeight/2 - 80,40,[{percent:0,color:"red"},{percent:1,color:"black"}]);
+    //eyeGradientL = utils.getRadialGradient(ctx,canvasWidth/2 - 80,canvasHeight/2 - 60,5,canvasWidth/2 - 80,canvasHeight/2 - 80,40,[{percent:0,color:"red"},{percent:1,color:"black"}]);
     eyeGradientR = utils.getRadialGradient(ctx,canvasWidth/2 + 80,canvasHeight/2 - 60,5,canvasWidth/2 + 80,canvasHeight/2 - 80,40,[{percent:0,color:"red"},{percent:1,color:"black"}]);
-	// keep a reference to the analyser node
+
+    // keep a reference to the analyser node
 	analyserNode = analyserNodeRef;
 	// this is the array where the analyser data will be stored
 	audioData = new Uint8Array(analyserNode.fftSize/2);
+
+    // eyelids classes
+    eyelidLeft = new utils.Eyelid(ctx,280,80,260,120,80,120,audioData);
+    eyelidRight = new utils.Eyelid(ctx,440,80,420,120,80,120,audioData);
+
+    // hook up sliders to eye color
+    let eyeColorRLabel = document.querySelector("#color-label-r");
+    document.querySelector("#eye-color-r").oninput = (e) => {
+        eyeColorR = e.target.value;
+        console.log(eyeColorR + ", " + eyeColorG + ", " + eyeColorB);
+        eyeColorRLabel.innerText = eyeColorR;
+    }
+    
+    // eye color g
+    let eyeColorGLabel = document.querySelector("#color-label-g");
+    document.querySelector("#eye-color-g").oninput = (e) => {
+        eyeColorG = e.target.value;
+        console.log(eyeColorR + ", " + eyeColorG + ", " + eyeColorB);
+        eyeColorGLabel.innerText = eyeColorG;
+    }
+    
+    // eye color b
+    let eyeColorBLabel = document.querySelector("#color-label-b");
+    document.querySelector("#eye-color-b").oninput = (e) => {
+        eyeColorB = e.target.value;
+        console.log(eyeColorR + ", " + eyeColorG + ", " + eyeColorB);
+        eyeColorBLabel.innerText = eyeColorB;
+    }
+    // eye classes
+    leftEye = new utils.Eyes(ctx,canvasWidth/2 - 80,canvasHeight/2 - 80,40,audioData);
+    rightEye = new utils.Eyes(ctx,canvasWidth/2 + 80,canvasHeight/2 - 80,40,audioData);
 }
 
 const draw = (params={}) => {
@@ -54,11 +94,12 @@ const draw = (params={}) => {
 	
     // update eyelid offset
     // eyelids will move depending on the average of all audio data
-    eyelidOffset = 0;
-    for (let i = 0; i < audioData.length; i++) {
-        eyelidOffset += (audioData[i] / 255);
-    }
-    eyelidOffset /= audioData.length;
+    // MOVED TO EYELID CLASS
+    // eyelidOffset = 0;
+    // for (let i = 0; i < audioData.length; i++) {
+    //     eyelidOffset += (audioData[i] / 255);
+    // }
+    // eyelidOffset /= audioData.length;
     //console.log(eyelidOffset);  
 
 	// 2 - draw background
@@ -78,48 +119,55 @@ const draw = (params={}) => {
     ctx.restore();
 
     // draw robot left eye
-    ctx.save();
-    ctx.fillStyle = eyeGradientL;
-    ctx.beginPath();
-    ctx.arc(canvasWidth/2 - 80,canvasHeight/2 - 80,40,0,2*Math.PI);
-    ctx.fill();
-    ctx.closePath();
+    // ctx.save();
+    // ctx.fillStyle = eyeGradientL;
+    // ctx.beginPath();
+    // ctx.arc(canvasWidth/2 - 80,canvasHeight/2 - 80,40,0,2*Math.PI);
+    // ctx.fill();
+    // ctx.closePath();
+    leftEye.update(eyeColorR,eyeColorG,eyeColorB);
+    leftEye.draw();
 
     // right eye
-    ctx.fillStyle = eyeGradientR;
-    ctx.beginPath();
-    ctx.arc(canvasWidth/2 + 80,canvasHeight/2 - 80,40,0,2*Math.PI);
-    ctx.fill();
-    ctx.closePath();
-    ctx.restore();
+    // ctx.fillStyle = eyeGradientR;
+    // ctx.beginPath();
+    // ctx.arc(canvasWidth/2 + 80,canvasHeight/2 - 80,40,0,2*Math.PI);
+    // ctx.fill();
+    // ctx.closePath();
+    // ctx.restore();
+    rightEye.update(eyeColorR,eyeColorG,eyeColorB);
+    rightEye.draw();
 
-    let eyelidLeft = new Eyelid();
     
     // eyelids left
-    ctx.save();
-    ctx.fillStyle = "gray";
-    ctx.translate(0, -eyelidOffset * 40);
-    ctx.beginPath();
-    ctx.moveTo(280,80);
-    ctx.lineTo(360,80);
-    ctx.lineTo(380,120);
-    ctx.lineTo(260,120);
-    ctx.fill();
-    ctx.closePath();
-    ctx.restore();
+    // ctx.save();
+    // ctx.fillStyle = "gray";
+    // ctx.translate(0, -eyelidOffset * 40);
+    // ctx.beginPath();
+    // ctx.moveTo(280,80);
+    // ctx.lineTo(360,80);
+    // ctx.lineTo(380,120);
+    // ctx.lineTo(260,120);
+    // ctx.fill();
+    // ctx.closePath();
+    // ctx.restore();
+    eyelidLeft.update();
+    eyelidLeft.draw();
 
     // eyelids right
-    ctx.save();
-    ctx.fillStyle = "gray";
-    ctx.translate(0, -eyelidOffset * 40);
-    ctx.beginPath();
-    ctx.moveTo(520,80);
-    ctx.lineTo(440,80);
-    ctx.lineTo(420,120);
-    ctx.lineTo(540,120);
-    ctx.fill();
-    ctx.closePath();
-    ctx.restore();
+    // ctx.save();
+    // ctx.fillStyle = "gray";
+    // ctx.translate(0, -eyelidOffset * 40);
+    // ctx.beginPath();
+    // ctx.moveTo(520,80);
+    // ctx.lineTo(440,80);
+    // ctx.lineTo(420,120);
+    // ctx.lineTo(540,120);
+    // ctx.fill();
+    // ctx.closePath();
+    // ctx.restore();
+    eyelidRight.update();
+    eyelidRight.draw();
 
 	// 3 - draw gradient
 	if (params.showGradient) {
@@ -195,40 +243,40 @@ const draw = (params={}) => {
         ctx.closePath();
         ctx.restore();
     }
-	// 5 - draw circles
-	if (params.showCircles) {
-        let maxRadius = canvasHeight / 4;
-        ctx.save();
-        ctx.globalAlpha = 0.5;
-        for (let i = 0; i < audioData.length; i++) {
-            //red ish circles
-            let percent = audioData[i] / 255;
+	// // 5 - draw circles
+	// if (params.showCircles) {
+    //     let maxRadius = canvasHeight / 4;
+    //     ctx.save();
+    //     ctx.globalAlpha = 0.5;
+    //     for (let i = 0; i < audioData.length; i++) {
+    //         //red ish circles
+    //         let percent = audioData[i] / 255;
 
-            let circleRadius = percent * maxRadius;
-            ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(255, 111, 111, .34 - percent / 3.0);
-            ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.closePath();
+    //         let circleRadius = percent * maxRadius;
+    //         ctx.beginPath();
+    //         ctx.fillStyle = utils.makeColor(255, 111, 111, .34 - percent / 3.0);
+    //         ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius, 0, 2 * Math.PI, false);
+    //         ctx.fill();
+    //         ctx.closePath();
 
-            //bluish circles
-            ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(0, 0, 0, .10 - percent / 10.0);
-            ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius * 1.5, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.closePath();
+    //         //bluish circles
+    //         ctx.beginPath();
+    //         ctx.fillStyle = utils.makeColor(0, 0, 0, .10 - percent / 10.0);
+    //         ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius * 1.5, 0, 2 * Math.PI, false);
+    //         ctx.fill();
+    //         ctx.closePath();
             
-            // yellowish circles, smaller
-            ctx.save();
-            ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(200, 200, 0, .5 - percent / 5.0);
-            ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius * 0.5, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.closePath();
-            ctx.restore();
-        }
-        ctx.restore();
-    }
+    //         // yellowish circles, smaller
+    //         ctx.save();
+    //         ctx.beginPath();
+    //         ctx.fillStyle = utils.makeColor(200, 200, 0, .5 - percent / 5.0);
+    //         ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius * 0.5, 0, 2 * Math.PI, false);
+    //         ctx.fill();
+    //         ctx.closePath();
+    //         ctx.restore();
+    //     }
+    //     ctx.restore();
+    // }
 
     // 6 - bitmap manipulation
 	// TODO: right now. we are looping though every pixel of the canvas (320,000 of them!), 
@@ -239,45 +287,45 @@ const draw = (params={}) => {
 	// A) grab all of the pixels on the canvas and put them in the `data` array
 	// `imageData.data` is a `Uint8ClampedArray()` typed array that has 1.28 million elements!
 	// the variable `data` below is a reference to that array 
-	let imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
-    let data = imageData.data;
-    let length = data.length;
-    let width = imageData.width; // not using here
+	// let imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+    // let data = imageData.data;
+    // let length = data.length;
+    // let width = imageData.width; // not using here
 
 	// B) Iterate through each pixel, stepping 4 elements at a time (which is the RGBA for 1 pixel)
-    for (let i = 0; i < length; i += 4) {
-		// C) randomly change every 20th pixel to red
-        if (params.showNoise && Math.random() < .05) {
-			// data[i] is the red channel
-			// data[i+1] is the green channel
-			// data[i+2] is the blue channel
-			// data[i+3] is the alpha channel
-			// zero out the red and green and blue channels
-			// make the red channel 100% red
-            data[i] = data[i + 1] = data[i + 2] = 0;
-            data[i] = 255; // red channel
+    // for (let i = 0; i < length; i += 4) {
+	// 	// C) randomly change every 20th pixel to red
+    //     if (params.showNoise && Math.random() < .05) {
+	// 		// data[i] is the red channel
+	// 		// data[i+1] is the green channel
+	// 		// data[i+2] is the blue channel
+	// 		// data[i+3] is the alpha channel
+	// 		// zero out the red and green and blue channels
+	// 		// make the red channel 100% red
+    //         data[i] = data[i + 1] = data[i + 2] = 0;
+    //         data[i] = 255; // red channel
 
             
-	    } // end if
+	//     } // end if
 
-        // invert? 
-        if (params.showInvert) {
-            let red = data[i], green = data[i + 1], blue = data[i + 2];
-            data[i] = 255 - red; // set red value
-            data[i + 1] = 255 - green; // set blue value
-            data[i + 2] = 255 - blue; // set green value
-            // data[i+3] is the alpha but we're not going to invert that
-        }
-	} // end for
+    //     // invert? 
+    //     if (params.showInvert) {
+    //         let red = data[i], green = data[i + 1], blue = data[i + 2];
+    //         data[i] = 255 - red; // set red value
+    //         data[i + 1] = 255 - green; // set blue value
+    //         data[i + 2] = 255 - blue; // set green value
+    //         // data[i+3] is the alpha but we're not going to invert that
+    //     }
+	// } // end for
 	
-    if (params.showEmboss) {
-        for (let i = 0; i < length; i++) {
-            if (i % 4 == 3) continue; // skip alpha channel
-            data[i] = 127 + 2 * data[i] - data[i + 4] - data[i + width * 4];
-        }
-    }
-	// D) copy image data back to canvas
-    ctx.putImageData(imageData, 0, 0);
+    // if (params.showEmboss) {
+    //     for (let i = 0; i < length; i++) {
+    //         if (i % 4 == 3) continue; // skip alpha channel
+    //         data[i] = 127 + 2 * data[i] - data[i + 4] - data[i + width * 4];
+    //     }
+    // }
+	// // D) copy image data back to canvas
+    // ctx.putImageData(imageData, 0, 0);
 }
 
 export {setupCanvas,draw};

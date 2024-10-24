@@ -1,0 +1,30 @@
+Initially, I wanted to do some sort of "chat bot" where the dropdown selects your question and the robot will answer, using a audio visualizer as the mouth. 
+
+First, I disabled all the selectors (for now)
+this includes show gradient, bars, circles, noise, invert colors, and emboss-cb
+
+The only thing that will be constant is the robot face. 
+
+added eyes, which are a gradient of red in the middle-bottom, and black on the edges. Yes, this is a HAL 9000 reference. 
+added trapezoid eyelids that jump up and down with the overall average audio. 
+
+Added a bar based mouth that goes off of byte frequency data
+
+added a button to choose whether the robot is using byte frequency or byte time domain data.
+
+added high shelf filter and low shelf filter
+
+move it to voices
+
+moved eyelids to class system
+
+moved eyeballs to the class system
+
+eyeball color now pulsates along with the audio
+
+all sliders are vertical now, to fit more
+
+
+added eyeball color sliders, default is white
+
+added json reader, reads title, file names / paths, and default volume value.
