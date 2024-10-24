@@ -41,6 +41,8 @@ const DEFAULTS = {
 utils.readAppData(json => {
   // set default song paths
   DEFAULTS.sound1 = json["audio"]["1"]["path"];
+  DEFAULTS.sound2 = json["audio"]["1"]["path"];
+  DEFAULTS.sound3 = json["audio"]["1"]["path"];
   // set default values
 
   // title
