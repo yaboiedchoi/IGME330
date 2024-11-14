@@ -8,6 +8,8 @@
 */
 
 import * as utils from './utils.js';
+import * as eyes from './classes/eyes.js';
+import * as eyelid from './classes/eyelid.js';
 
 let ctx,
     canvasWidth,
@@ -49,8 +51,8 @@ const setupCanvas = (canvasElement,analyserNodeRef) => {
 	audioData = new Uint8Array(analyserNode.fftSize/2);
 
     // eyelids classes
-    eyelidLeft = new utils.Eyelid(ctx,280,80,260,120,80,120,audioData);
-    eyelidRight = new utils.Eyelid(ctx,440,80,420,120,80,120,audioData);
+    eyelidLeft = new eyelid.Eyelid(ctx,280,80,260,120,80,120,audioData);
+    eyelidRight = new eyelid.Eyelid(ctx,440,80,420,120,80,120,audioData);
 
     // hook up sliders to eye color
     let eyeColorRLabel = document.querySelector("#color-label-r");
@@ -76,8 +78,8 @@ const setupCanvas = (canvasElement,analyserNodeRef) => {
         eyeColorBLabel.innerText = eyeColorB;
     }
     // eye classes
-    leftEye = new utils.Eyes(ctx,canvasWidth/2 - 80,canvasHeight/2 - 80,40,audioData);
-    rightEye = new utils.Eyes(ctx,canvasWidth/2 + 80,canvasHeight/2 - 80,40,audioData);
+    leftEye = new eyes.Eyes(ctx,canvasWidth/2 - 80,canvasHeight/2 - 80,40,audioData);
+    rightEye = new eyes.Eyes(ctx,canvasWidth/2 + 80,canvasHeight/2 - 80,40,audioData);
 }
 
 const draw = (params={}) => {

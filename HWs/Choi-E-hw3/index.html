@@ -3,19 +3,53 @@
 <head>
   <meta charset="utf-8">
   <title>Audio Visualizer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <link href="./styles/default-styles.css" type="text/css" rel="stylesheet">
-  <script src="./src/loader.js" type="module"></script>
+  
+  <!--<script src="./src/loader.js" type="module"></script>-->
+  <script src="./dist/bundle.js"></script>
 </head>
 <body>
 <main>
-  <h1 id="title">Title</h1>
-  <canvas width="800" height="400"></canvas>
+  <nav class="navbar has-shadow is-black">
+    <!-- logo / brand -->
+    <div class="navbar-brand">
+      <a class="navbar-item" href="index.html">
+        <!--<i class="fas fa-hotdog"></i>-->
+        <img src="media/images/EdwardChoiLogo.png" alt="Logo" style="max-height: 2.5rem">
+      </a>
+      <a class="navbar-burger" id="burger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu" id="nav-links">
+      <div class="navbar-start">
+        <a class="navbar-item has-text-weight-bold">
+          App
+        </a>
+      
+        <a class="navbar-item is-hoverable" href="about.html">
+          About
+        </a>
+
+        <a class="navbar-item is-hoverable" href="docs.html">
+          Documentation
+        </a>
+      </div> <!-- end navbar-start -->
+    </div>
+  </nav>
+  <h1 id="title" class="is-size-3 has-text-centered has-text-weight-medium">Title</h1>
+  <div id="canvas"><canvas width="800" height="400"></canvas></div>
   <div id="controls">
-    <div class="section">
+    <div class="ui-portion">
       <button id="play-btn" data-playing="no"></button>
       <button id="fs-btn">Full Screen</button>
     </div>
-		<div class="section">
+		<div class="ui-portion">
       <label>Track: 
         <select id="track-select">
           <option value="media/New Adventure Theme.mp3" selected>New Adventure Theme</option>
@@ -42,7 +76,7 @@
         <span id="color-label-b">255</span>
       </div>
     </div>
-    <div class="section">
+    <div class="ui-portion">
       <!-- <span><input type="checkbox" id="gradient-cb"><label for="gradient-cb">Show Gradient</label></span>
       <span><input type="checkbox" id="bars-cb" checked><label for="bars-cb">Show Bars</label></span>
       <span><input type="checkbox" id="circles-cb"><label for="circles-cb">Show Circles</label></span> -->
@@ -55,7 +89,7 @@
       <span><input type="checkbox" id="low-shelf"><label for="low-shelf">LowShelf Filter (Bass)</label></span> -->
       <!-- <span><input type="checkbox" id="distortion"><label for="distortion">HighShelf Filter (Treble)</label></span> -->
     </div>
-    <div class="section">
+    <div class="ui-portion">
       <label>Vocal Module:  
         <select id="voice-select">
           <option value="voice1">Deep Voice</option>
@@ -72,5 +106,6 @@
     </label>
   </div>
 </main>
+<script src="./src/navbar-menu.js"></script>
 </body>
 </html>
