@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Audio Visualizer</title>
+  <link href="./styles/default-styles.css" type="text/css" rel="stylesheet">
+  <script src="./src/loader.js" type="module"></script>
+</head>
+<body>
+<main>
+  <h1 id="title">Title</h1>
+  <canvas width="800" height="400"></canvas>
+  <div id="controls">
+    <div class="section">
+      <button id="play-btn" data-playing="no"></button>
+      <button id="fs-btn">Full Screen</button>
+    </div>
+		<div class="section">
+      <label>Track: 
+        <select id="track-select">
+          <option value="media/New Adventure Theme.mp3" selected>New Adventure Theme</option>
+          <option value="media/Peanuts Theme.mp3">Peanuts Theme</option>
+          <option value="media/The Picard Song.mp3">The Picard Song</option>
+        </select>
+      </label>
+    </div>
+    <div id="sliders">
+      <div class="slider">
+        Volume: <input type="range" id="volume-slider" min="0" max="2" value="1" step="0.01">
+        <span id="volume-label">50</span>
+      </div>
+      <div class="slider">
+        Eye Color R: <input type="range" id="eye-color-r" min="0" max="255" value="255" step="1">
+        <span id="color-label-r">255</span>
+      </div>
+      <div class="slider">
+        Eye Color G: <input type="range" id="eye-color-g" min="0" max="255" value="255" step="1">
+        <span id="color-label-g">255</span>
+      </div>
+      <div class="slider">
+        Eye Color B: <input type="range" id="eye-color-b" min="0" max="255" value="255" step="1">
+        <span id="color-label-b">255</span>
+      </div>
+    </div>
+    <div class="section">
+      <!-- <span><input type="checkbox" id="gradient-cb"><label for="gradient-cb">Show Gradient</label></span>
+      <span><input type="checkbox" id="bars-cb" checked><label for="bars-cb">Show Bars</label></span>
+      <span><input type="checkbox" id="circles-cb"><label for="circles-cb">Show Circles</label></span> -->
+      <!-- we'll use this 4th checkbox soon! -->
+      <!-- <span><input type="checkbox" id="noise-cb"><label for="noise-cb">Show Noise</label></span>
+      <span><input type="checkbox" id="invert-cb"><label for="invert-cb">Invert Colors</label></span>
+      <span><input type="checkbox" id="emboss-cb"><label for="emboss-cb">Emboss</label></span> -->
+      <span><label for="byte-freq">Use Byte Frequency</label><input type="checkbox" id="byte-freq" checked></span>
+      <!-- <span><input type="checkbox" id="high-shelf"><label for="high-shelf">HighShelf Filter (Treble)</label></span>
+      <span><input type="checkbox" id="low-shelf"><label for="low-shelf">LowShelf Filter (Bass)</label></span> -->
+      <!-- <span><input type="checkbox" id="distortion"><label for="distortion">HighShelf Filter (Treble)</label></span> -->
+    </div>
+    <div class="section">
+      <label>Vocal Module:  
+        <select id="voice-select">
+          <option value="voice1">Deep Voice</option>
+          <option value="voice2" selected>Middle Voice</option>
+          <option value="voice3">High Voice</option>
+        </select>
+      </label>
+    </div>
+    <label>Mouth Type: 
+      <select id="mouth-select">
+        <option value="mouth1" selected>Red Bar Mouth</option>
+        <option value="mouth2">Line Mouth</option>
+      </select>
+    </label>
+  </div>
+</main>
+</body>
+</html>
