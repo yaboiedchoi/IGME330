@@ -35,49 +35,19 @@ let json;
 let audioPathList = [];
 
 // 1 - here we are faking an enumeration
-const DEFAULTS = {
+let DEFAULTS = {
 };
 
-utils.readAppData(json => {
-  // set default song paths
-  DEFAULTS.sound1 = json["audio"]["1"]["path"];
-  DEFAULTS.sound2 = json["audio"]["1"]["path"];
-  DEFAULTS.sound3 = json["audio"]["1"]["path"];
-  // set default values
 
-  // title
-  document.title = json.title;
-  document.querySelector("#title").innerHTML = json.title;
 
-  // volume
-  // console.log(json["default-slider-values"].volume);
-  document.querySelector("#volume-slider").value = json["default-values"].volume;
-  document.querySelector("#volume-label").innerHTML = Math.round(json["default-values"].volume / 2 * 100);
-  
-  let volumeSlider = document.querySelector("#volume-slider");
-  let volumeLabel = document.querySelector("#volume-label");
-  // add .oninput event to slider
-  volumeSlider.oninput = e => {
-    // set the gain
-    audio.setVolume(e.target.value);
-    // update the label to match the value
-    volumeLabel.innerHTML = Math.round((e.target.value/2 * 100));
-  }
-
-  // path
-  // console.log(json["audio"]["1"]);
-  for (let key in json["audio"]){
-    DEFAULTS["sound" + key] = json["audio"][key]["path"];
-  }
-  console.log(DEFAULTS);
-})
-
-const init = () => {
+const init = (defaults) => {
 //   // load and parse the JSON file
 //   loadJson();
 
 	console.log("init called");
 	console.log(`Testing utils.getRandomColor() import: ${utils.getRandomColor()}`);
+  DEFAULTS = defaults;
+  console.log(DEFAULTS);
 	audio.setupWebAudio(DEFAULTS.sound1);
   let canvasElement = document.querySelector("canvas"); // hookup <canvas> element
 	setupUI(canvasElement);

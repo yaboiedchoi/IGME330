@@ -1,7 +1,7 @@
 // no changes needed in this file.
 const readAppData = (callback) => {
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', '../data/av-data.json', true);
+  xhr.open('GET', 'data/av-data.json', true);
 
   xhr.onload = () => {
     if (xhr.status === 200) {
