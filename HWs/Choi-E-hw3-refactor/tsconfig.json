@@ -5,4 +5,4 @@
         "sourceMap": true
     },
     "include": ["src/**/*"]
-  }
+}
