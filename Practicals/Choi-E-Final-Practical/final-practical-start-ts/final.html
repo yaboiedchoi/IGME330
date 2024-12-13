@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adoptable Creatures</title>
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+  <!--<script src="./js/main.js" type="module"></script>-->
+</head>
+<body>
+  <header>
+    <h1>Adoptable Creatures</h1>
+    <p>Choose a category to view adoptable creatures:</p>
+  </header>
+  <main>
+    <section>
+      <label for="creatureType">Select a type:</label>
+      <select id="creatureType">
+        <option value="cats">Cats</option>
+        <option value="dogs">Dogs</option>
+        <option value="dragons">Dragons</option>
+      </select>
+      <button id="getDataButton" class="button is-success">Get Data</button>
+    </section>
+    <section id="errorMessage" class="hidden">Error loading data</section>
+    <section id="results" class="columns is-multiline">
+      <!-- Results will appear here -->
+    </section>
+  </main>
+  <footer>
+    <p>Final Practical: Adoptable Creatures API - by Edward Choi</p>
+  </footer>
+</body>
+<script src="./dist/bundle.js"></script>
+</html>

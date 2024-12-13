@@ -1,0 +1,62 @@
+package.json
+
+{
+  "name": "final-practical",
+  "version": "1.0.0",
+  "main": "index.js",
+ "scripts": {
+  "build": "webpack --mode production --watch"
+},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.7.2",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
+  }
+}
+
+
+
+
+webpack.config.js:
+
+const path = require('path');
+module.exports = {
+  entry: './src/main.ts',
+  module: {
+    rules: [
+      {
+        test: [/\.ts?$/,/\.js?$/],
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  },
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+  },
+  devtool: 'source-map'
+};
+
+
+
+
+tsconfig.json:
+
+{
+    "compilerOptions": {
+        "target": "ES5",
+        "module": "ES6",
+        "sourceMap": true
+    },
+    "include": ["src/**/*"]
+}
